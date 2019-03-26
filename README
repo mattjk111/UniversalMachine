@@ -1,0 +1,116 @@
+                ---------------------------------------------
+                    Name: Hyun Seok Lee & Matthew Kim
+                            Comp40: Homework 6
+                ---------------------------------------------
+
+ACKNOWLEDGEMENTS OF HELP RECEIVED:
+---------------------------------
+- Wonderful TAs in Halligan :)
+
+
+WHAT HAS BEEN CORRECTLY IMPLEMENTED:
+-----------------------------------
+- segments.c
+- operations.c
+- programloader.c
+- 
+- makefile
+
+
+NOT IMPLEMENTED/WRONG IMPLEMENTATION:
+------------------------------------
+- N/A
+
+
+DEPARTURES FROM ORIGINAL DESIGN:
+--------------------------------
+- No significant departures from our design
+    - forgot that we had to put in the Seg_T
+        itself for many segment functions
+
+
+ARCHITECTURE OF SOLUTION:
+-------------------------
+- segments.c
+    - interface for memory storage, retrieval, and
+        replacement
+    - implements a sequence of UArrays of uint32_t's to represent 
+        segmented memory of 32 bit words. 
+    - its other secret is that it holds unmapped id's in another sequence
+        to keep track of what id's are available for reuse. 
+- operations.c
+    - interface for the 14 instructions' handling and execution
+    - Uses segments.c functions to load, store values and programs
+    - secret is how we do the operations, the user only can put 32 bit
+        instructions, pointers registers and memory, and the program counter
+- programloader.c
+    - Calls segments.c functions to load 32 bit instructions from file
+    - Then runs a while loop for the program counter that calls 
+        operations.c functions for a given instruction.
+    - Hides the secret that the code is in segment zero.
+
+
+
+EXECUTION TIME:
+--------------
+- our program executes midmark.um (a binary with over 80 million instructions
+    according to the lab) in around 10.35 seconds, so it would take 
+    around 6.47 seconds to execute 50 million instructions
+
+
+
+UM UNIT TESTS:
+--------------
+- halt.um: 
+    - tests the halt operation and memory leaks by halting
+- halt-verbose.um: 
+    - tests the halt operation by halting before output
+- print-six.um: 
+    - tests loading, adding, and output by loading values into
+        registers, adding them, and printing them. Should print "6"
+- c-move.um: 
+    - tests the c move operation by perfoming a c move where register
+        c is not zero. Should print out "<"
+- multiply.um: 
+    - tests the multiply operation by multiplying and printing.
+        Should print out "0"
+- divide.um: 
+    - tests the divide operation by dividing and printing.
+        Should print out "2"
+- sloadstore.um: 
+    - tests mapping, sstore, and sload by storing a mapping 
+        a segment, storing a value into that segment, loading that value,
+        and then printing it. Should print "X"
+- nand.um: 
+    - tests the nand by loading two 0 into registers then
+        performing nand operation which should return ~0, then copy that 
+        into another register, performing nand on those two registers which
+        should return zero, the adding 88 to zero and printing, 
+        which should print "X"
+- input_3_vals.um: 
+    - tests input by inputting 3 values and then printing them out
+- unmap.um:
+    - tests unmapping by mapping 2 segments, then unmapping the first one
+        then storing and retriving values from the second and printing.
+        Should output "X"
+- load_prorgram.um:
+    - tests the load program instruction by calling it and printing the 
+    spot that it jumps to within the 0th segment.
+- all_segments.um: 
+    - Stores values i into $m[1][i] for i in range 0 to 99.
+    - Stores values i into $m[2][i] for i in range 0 to 87.
+    - Stores values i into $m[3][i] for i in range 0 to 52.
+    - Checks if loading values of segment offset extremas works properly.
+        - simply load and output the maximum. ex. output($m[1][99])
+    - Checks if deactivation and reactivation of $m[2][i] work properly.
+        - We checked by printing the segment id it returns.
+
+
+
+APROXIMATE TIME SPENT ON ASSIGNMENT:
+-----------------------------------
+- 3 to 5 hours analyzing
+- 5 to 7 hours preparing our design
+- 7 to 9 hours solving
+
+
